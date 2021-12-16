@@ -16,14 +16,25 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
   # TODO (cg 2021/11/16 16:44):  this is not the right way to test if you're
   # doing AD. But I don't want to hard-bake the ForwardDiff.Dual type in here.
   is_ad = !(v isa AbstractFloat)
-  # Special cases:
+  # Special cases, now just half-integers:
   #
-  # Note that we do a special check for using the exponential improvement in
-  # the asymptotic expansion if we're doing AD.
-  half_int_branch  = isinteger(v-1/2)
-  #whole_int_branch = (isinteger(v) && (abs(x) < 7.0))
-  half_int_branch  && return _besselk_as(v, x, Int(ceil(v)), is_ad) # AS is exact.
-  #whole_int_branch && return _besselk_temme(v, x, maxit, tol, false) 
+  # TODO (cg 2021/12/16 12:41): for the moment, specifically at half
+  # integer values the second derivatives are more accurate using the direct
+  # series, even at values in which for direct evaluations v is large enough
+  # that the series isn't so great. It isn't earth-shattering and the temme one
+  # is much more expensive (300 ns vs 100 ns on my machine), but in the interest
+  # of maximum safety I'm switching to this behavior.
+  #
+  # What would really be nice is some way if checking if (v isa Dual{T,V,N}
+  # where T<: Dual). But again, I'm worried about getting too stuck with
+  # ForwardDiff.
+  if isinteger(v-1/2) && (x < 8.5)
+    if is_ad
+      return _besselk_ser(v, x, maxit, tol, false) 
+    else
+      return _besselk_as(v, x, Int(ceil(v)), is_ad) 
+    end
+  end
   #
   # General cases:
   #

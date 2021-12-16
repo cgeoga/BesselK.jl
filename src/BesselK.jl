@@ -2,7 +2,7 @@ module BesselK
 
   using LinearAlgebra, SpecialFunctions, Polynomials
 
-  export _besselk
+  export adbesselk, adbesselkxv
 
   include("besk_ser.jl")   # enhanced direct series. The workhorse for small-ish args.
   include("besk_as.jl")    # asymptotic expansion for large arg.
