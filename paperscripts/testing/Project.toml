@@ -1,0 +1,11 @@
+[deps]
+ArbNumerics = "7e558dbc-694d-5a72-987c-6f4ebed21442"
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+BesselK = "432ab697-7a72-484f-bc4a-bc531f5c819b"
+FiniteDifferences = "26cc04aa-876d-5657-8c51-4c34ba976000"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+HypergeometricFunctions = "34004b35-14d8-5ef3-9330-4cdb6864b03a"
+Infiltrator = "5903a43b-9cc3-4c30-8d17-598619ec4e9b"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"

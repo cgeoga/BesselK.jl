@@ -1,0 +1,7 @@
+*.csv
+*.jld
+*.serialized
+*.hdf5
+*.pdf
+debug*.jl
+Manifest.toml
