@@ -2,8 +2,8 @@
 # BesselK.jl
 
 This package implements one function: the modified second-kind Bessel function
-K_\nu(x). It is designed specifically to be automatically differentiable *with
-ForwardDiff.jl*, including providing derivatives with respect to the order
+K_\nu(x). It is designed specifically to be automatically differentiable **with
+ForwardDiff.jl**, including providing derivatives with respect to the order
 parameter \nu.
 
 In order to avoid naming conflicts with `SpecialFunctions.besselk`, this package
@@ -30,6 +30,22 @@ using ForwardDiff, SpecialFunctions, BesselK
 @show ForwardDiff.derivative(_v->adbesselk(_v, x), v)   # good to go.
 @show ForwardDiff.derivative(_v->adbesselkxv(_v, x), v) # good to go.
 ```
+
+# Limitations
+
+For the moment there are two primary limitations:
+
+* **AD compatibility with `ForwardDiff.jl` only**. The issue here is that in one
+  particular case I use a different function branch of one is taking a
+  derivative with respect to `v` or just evaluating `besselk(v, x)`. The way that
+  is currently checked in the code is with `if (v isa AbstractFloat)`, which may
+  not work properly for other methods.
+
+* **Only derivatives up to the second are checked and confirmed accurate.** The
+  code uses a large number of local polynomial expansions at slightly hairy
+  values of internal intermediate functions, and so at some sufficiently high
+  level of derivative those local polynomials won't give accurate partial
+  information.
 
 # Implementation details
 
