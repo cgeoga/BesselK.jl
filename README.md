@@ -6,14 +6,29 @@ K_\nu(x). It is designed specifically to be automatically differentiable **with
 ForwardDiff.jl**, including providing derivatives with respect to the order
 parameter \nu.
 
+Derivatives with respect to \nu are significantly faster than any finite
+differencing method, including the most naive fixed-step minimum-order method,
+and in almost all of the domain are meaningful more accurate. Particularly near
+the origin you should expect to gain at least 3-5 digits. Second derivatives are
+even more dramatic, both in terms of the speedup and accuracy gains, now
+commonly giving 10+ more digits of accuracy.
+
+As a happy accident/side-effect, if you're willing to give up the last couple
+digits of accuracy, you could also use `ForwardDiff.jl` on this code for
+derivatives with respect to argument for an order-of-magnitude speedup. In some
+casual testing the argument-derivative errors with this code are never worse
+than `1e-12`, and they turn 1.4 \mu s with allocations into 140 ns without any
+allocations. 
+
 In order to avoid naming conflicts with `SpecialFunctions.besselk`, this package
 exports two functions: `adbesselk` and `adbesselkxv`. The first function is
 K_\nu(x), and the second function is (x^\nu)\*K_\nu(x). This second function has
 the nice property of being bounded at the origin when \nu>0, and comes up in the
 Matern covariance function, which was the primary motivation for this
 implementation. The function `adbesselk` returns `SpecialFunctions.besselk` if
-`v isa AbstractFloat`, since the AMOS `besselk` is slightly more accurate. But
-otherwise, it returns `BesselK._besselk`, which is the Julia-native
+`v isa AbstractFloat`, since the AMOS `besselk` is slightly more accurate, and
+there is a rule in place for the exact argument derivatives. But otherwise, it
+returns `BesselK._besselk(v, x, args...)`, which is the Julia-native
 implementation here that provides very accurate derivatives.
 
 Here is a very basic demo:
