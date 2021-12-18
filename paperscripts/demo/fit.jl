@@ -25,8 +25,13 @@ function fitter(objects_initval)
   addOption(prob, "tol", 1e-5)
   addOption(prob, "max_iter", maxiter)
   prob.x = deepcopy(ini) # for safety to avoid weird persistent pointer games.
-  @time status = solveProblem(prob)
-  return (prob, status, case, deepcopy(prob.x), _nll(prob.x), hesfun(prob.x), cache, ini)
+  try
+    @time status = solveProblem(prob)
+    return (prob, status, case, deepcopy(prob.x), _nll(prob.x), hesfun(prob.x), cache, ini)
+  catch
+    println("Optimization failed out with an error!")
+    return (prob, :FAIL_ERROR, case, deepcopy(prob.x), _nll(prob.x), hesfun(prob.x), cache, ini)
+  end
 end
 
 const cases = ((:FD_FISH, grad_fd!, fishfd, 100),
