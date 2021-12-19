@@ -10,4 +10,5 @@ SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
 SpecialFunctions = "2"
+Polynomials = "2"
 julia = "1"
