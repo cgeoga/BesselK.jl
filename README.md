@@ -1,6 +1,11 @@
 
 # BesselK.jl
 
+[build-latest-img]: https://github.com/cgeoga/BesselK.jl/workflows/CI/badge.svg
+[build-url]: https://github.com/cgeoga/BesselK.jl/actions?query=workflow
+
+[![][build-latest-img]][build-url] 
+
 This package implements one function: the modified second-kind Bessel function
 K_\nu(x). It is designed specifically to be automatically differentiable **with
 ForwardDiff.jl**, including providing derivatives with respect to the order
