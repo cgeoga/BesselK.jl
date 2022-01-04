@@ -89,9 +89,25 @@ or anything.
 
 # Citation
 
-Coming very shortly. While this package ostensibly only covers a single
-function, putting all of this together and making it this fast and accurate was
-really a lot of work. I would *really* appreciate you citing this paper if this
-package was useful in your research. Like, for example, if you used this package
-to fit a Matern smoothness parameter with second order optimization methods.
+If you use this package in your research that gets compiled into some kind of
+report/article/poster/etc, please cite [this paper](https://arxiv.org/abs/2201.00090):
+```
+@misc{GMSS_2022,
+      title={Fitting Mat\'ern Smoothness Parameters Using Automatic Differentiation}, 
+      author={Christopher J. Geoga and Oana Marin and Michel Schanen and Michael L. Stein},
+      year={2022},
+      eprint={2201.00090},
+      archivePrefix={arXiv},
+      primaryClass={stat.CO}
+}
+```
+While this package ostensibly only covers a single function, putting all of this
+together and making it this fast and accurate was really a lot of work. I would
+*really* appreciate you citing this paper if this package was useful in your
+research. Like, for example, if you used this package to fit a Matern smoothness
+parameter with second order optimization methods.
+
+Also, if you're reading this a few months into 2022 or later, we would also
+really appreciate it if you check back here or even open an issue/email to ask
+if there is an official journal reference by that point. Thanks in advance!
 
