@@ -1,0 +1,20 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it as below."
+
+authors:
+  - family-names: Geoga
+    given-names: Christopher J.
+  - family-names: Marin
+    given-names: Oana
+  - family-names: Schanen
+    given-names: Michel
+  - family-names: Stein
+    given-names: Michael L.
+    
+# Based on https://github.com/citation-file-format/citation-file-format/blob/main/schema-guide.md
+identifiers:
+  - type: other
+    value: arXiv:2201.00090
+
+title: "Fitting Mat\'ern Smoothness Parameters Using Automatic Differentiation"
+year: 2022
