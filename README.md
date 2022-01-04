@@ -7,9 +7,9 @@
 [![][build-latest-img]][build-url] 
 
 This package implements one function: the modified second-kind Bessel function
-K_\nu(x). It is designed specifically to be automatically differentiable **with
+Kᵥ(x). It is designed specifically to be automatically differentiable **with
 ForwardDiff.jl**, including providing derivatives with respect to the order
-parameter \nu.
+parameter `v`.
 
 Derivatives with respect to \nu are significantly faster than any finite
 differencing method, including the most naive fixed-step minimum-order method,
@@ -22,13 +22,13 @@ As a happy accident/side-effect, if you're willing to give up the last couple
 digits of accuracy, you could also use `ForwardDiff.jl` on this code for
 derivatives with respect to argument for an order-of-magnitude speedup. In some
 casual testing the argument-derivative errors with this code are never worse
-than `1e-12`, and they turn 1.4 \mu s with allocations into 140 ns without any
+than `1e-12`, and they turn 1.4 μs with allocations into 140 ns without any
 allocations. 
 
 In order to avoid naming conflicts with `SpecialFunctions.besselk`, this package
 exports two functions: `adbesselk` and `adbesselkxv`. The first function is
-K_\nu(x), and the second function is (x^\nu)\*K_\nu(x). This second function has
-the nice property of being bounded at the origin when \nu>0, and comes up in the
+Kᵥ(x), and the second function is (xᵛ)*Kᵥ(x). This second function has
+the nice property of being bounded at the origin when v>0, and comes up in the
 Matern covariance function, which was the primary motivation for this
 implementation. The function `adbesselk` returns `SpecialFunctions.besselk` if
 `v isa AbstractFloat`, since the AMOS `besselk` is slightly more accurate, and
@@ -70,7 +70,7 @@ For the moment there are two primary limitations:
 # Implementation details
 
 See the reference for an entire paper discussing the implementation. But in a
-word, this code uses several routines to evaluate K_\nu accurately on different
+word, this code uses several routines to evaluate Kᵥ accurately on different
 parts of the domain, and has to use some non-standard to maintain AD
 compatibility and correctness. When `v` is an integer or half-integer, for
 example, a lot of additional work is required.
