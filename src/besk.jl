@@ -32,7 +32,8 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
     if is_ad
       return _besselk_ser(v, x, maxit, tol, false) 
     else
-      return _besselk_as(v, x, Int(ceil(v)), is_ad) 
+      # Probably don't need the is_ad correction here.
+      return _besselk_as(v, x, Int(ceil(v)), false) 
     end
   end
   #
@@ -58,7 +59,7 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
     if abs(v) > 1.5
       return _besselk_asv(v,x,8) 
     else
-      return _besselk_as(v,x,order,is_ad) 
+      return _besselk_as(v,x,order) 
     end
   end
 end
@@ -94,13 +95,18 @@ end
   evalpoly(x, cof)
 end
 
+# Note that the special series cutofs are low compared to the above function. In
+# general, the adbesselk* functions that are exported really should be pretty
+# near machine precision here or should just fall back to AMOS when possible. It
+# turns out that the *xv modifications in the code are really only helpful when
+# the argument is pretty small.
 function adbesselkxv(v, x, maxit=100, tol=1e-12, order=5)
   (iszero(v) && iszero(x)) && return Inf
   if !isinteger(v) && (abs(x) <= 1e-8) # use Taylor at zero.
     return besselkxv_t0(v, x)
-  elseif (abs(x) < 8.5) && (v < 3.0) && !isnearint(v, 0.01)
+  elseif (abs(x) < 2.0) && (v < 3.0) && !isnearint(v, 0.01)
     return _besselk_ser(v, x, maxit, tol, true)
-  elseif (abs(x) < 8.5)
+  elseif (abs(x) < 2.0)
     return _besselk_temme(v, x, maxit, tol, true)
   else
     return adbesselk(v, x, maxit, tol, order)*(x^v)

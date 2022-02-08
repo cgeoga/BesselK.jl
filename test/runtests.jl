@@ -9,6 +9,8 @@ const REF_FD2 = central_fdm(10,2)
 
 atolfun(tru, est) = isnan(est) ? NaN : (isinf(tru) ? 0.0 : abs(tru-est))
 
+besselkxv(v,x) = besselk(v,x)*(x^v)
+
 fd_dbesselk_dv(v, x) = REF_FD1(_v->besselk(_v, x), v)
 ad_dbesselk_dv(v, x) = ForwardDiff.derivative(_v->BesselK.adbesselk(_v, x), v)
 
@@ -17,11 +19,14 @@ ad2_dbesselk_dv_dv(v, x) = ForwardDiff.derivative(_v->ad_dbesselk_dv(_v, x), v)
 
 # direct accuracy:
 @testset "direct eval" begin
-  amos_ref  = map(vx->besselk(vx[1], vx[2]), VX)
-  candidate = map(vx->BesselK._besselk(vx[1], vx[2]), VX)
-  atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
-  atols_f   = atols[amos_ref .<= 1000.0]
-  @test maximum(atols_f) < 1e-10
+  for (ref_fn, cand_fn) in ((besselk,   BesselK._besselk),
+                            (besselkxv, BesselK.adbesselkxv))
+    amos_ref  = map(vx->ref_fn(vx[1], vx[2]), VX)
+    candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
+    atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
+    atols_f   = atols[amos_ref .<= 1000.0]
+    @test maximum(atols_f) < 1e-10
+  end
 end
 
 # test derivative accuracy:

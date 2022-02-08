@@ -30,13 +30,13 @@ function _besselk_ser(v, x, maxit, tol, modify)
   _t2 = gam_nv*xd2_v*gam_1mnv
   # now the loop using Oana's series expansion, with term function manually
   # inlined for max speed:
-  for _ in 0:maxit
+  for _j in 0:maxit
     t1   = half*xd2_pow
     tmp  = _t1/(gmv*fact_k)
     tmp += _t2/(gpv*fact_k)
     term = t1*tmp
     out += term
-    abs(term) < tol && return out
+    ((abs(term) < tol) && _j>5) && return out
     # Use the trick that gamma(1+k+1+v) == gamma(1+k+v)*(1+k+v) to skip gamma calls:
     (gpv, gmv) = (gpv*(oneT+v+floatk), gmv*(oneT-v+floatk)) 
     xd2_pow *= xd22
