@@ -1,5 +1,5 @@
 
-using Test, BesselK, SpecialFunctions, FiniteDifferences, ForwardDiff
+using Test, BenchmarkTools, BesselK, SpecialFunctions, FiniteDifferences, ForwardDiff
 
 const VGRID   = range(0.25, 10.0, length=100)
 const XGRID   = range(0.0, 50.0,  length=201)[2:end]
@@ -40,5 +40,17 @@ end
   atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
   atols_f   = atols[amos_ref .<= 100.0]
   @test maximum(atols_f) < 1e-6
+end
+
+@testset "confirm no allocations" begin
+  VGRID_ALLOC = (0.25, 1.0-1e-8, 1.0, 1.5, 2.1, 3.0, 3.5, 4.8)
+  XGRID_ALLOC = range(0.0, 50.0, length=11)[2:end] 
+  VX_ALLOC    = collect(Iterators.product(VGRID_ALLOC, XGRID_ALLOC))
+  ad_alloc_test(v,x)  = @ballocated ad_dbesselk_dv($v,$x) samples=10
+  ad2_alloc_test(v,x) = @ballocated ad2_dbesselk_dv_dv($v,$x) samples=10
+  ad_allocs  = map(vx->ad_alloc_test(vx[1], vx[2]), VX_ALLOC)
+  ad2_allocs = map(vx->ad2_alloc_test(vx[1], vx[2]), VX_ALLOC)
+  @test all(iszero, ad_allocs)
+  @test all(iszero, ad2_allocs)
 end
 

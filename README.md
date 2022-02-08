@@ -9,7 +9,8 @@
 This package implements one function: the modified second-kind Bessel function
 Kᵥ(x). It is designed specifically to be automatically differentiable **with
 ForwardDiff.jl**, including providing derivatives with respect to the order
-parameter `v`.
+parameter `v` **that are fast and non-allocating in the entire domain for both
+first and second order**.
 
 Derivatives with respect to \nu are significantly faster than any finite
 differencing method, including the most naive fixed-step minimum-order method,
