@@ -104,13 +104,15 @@ end
 function adbesselkxv(v, x, maxit=100, tol=1e-12, order=5)
   (iszero(v) && iszero(x)) && return Inf
   is_ad = !(v isa AbstractFloat)
-  xcut  = is_ad ? 8.5 : 2.0
+  xcut  = is_ad ? 6.0 : 2.0
   if !isinteger(v) && (abs(x) <= 1e-8) # use Taylor at zero.
     return besselkxv_t0(v, x)
   elseif (x < xcut) && (v < 5.75) && !isnearint(v, 0.01)
     return _besselk_ser(v, x, maxit, tol, true)
   elseif (x < xcut)
     return _besselk_temme(v, x, maxit, tol, true)
+  elseif is_ad && (x > xcut) && (x < 15.0)
+    return _besselk_asv(v, x, 12, true)
   else
     return adbesselk(v, x, maxit, tol, order)*(x^v)
   end

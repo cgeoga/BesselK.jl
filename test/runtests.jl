@@ -25,40 +25,68 @@ ad2_dbesselkxv_dv_dv(v, x) = ForwardDiff.derivative(_v->ad_dbesselkxv_dv(_v, x),
 
 # direct accuracy:
 @testset "direct eval" begin
+  println("\nDirect evaluations:")
   for (ref_fn, cand_fn, case) in ((besselk,   BesselK._besselk, :standard),
                                   (besselkxv, BesselK.adbesselkxv, :rescaled))
     amos_ref  = map(vx->ref_fn(vx[1], vx[2]), VX)
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
-    atols_f   = atols[amos_ref .<= 1000.0]
-    @test maximum(atols_f) < 1e-10
+    ix        = findall(x-> x <= 1000.0, amos_ref)
+    thresh    = case == :standard ? 5e-11 : 2e-12
+    (maxerr, maxix) = findmax(abs, atols[ix])
+    (maxerr_v, maxerr_x) = VX[ix][maxix]
+    println("Case $case:")
+    println("worst (v,x):  ($maxerr_v, $maxerr_x)")
+    println("Ref value:     $(amos_ref[ix][maxix])")
+    println("Est value:     $(candidate[ix][maxix])")
+    println("Abs error:     $(round(maxerr, sigdigits=3))")
+    @test maxerr < thresh
   end
+  println()
 end
 
 # test derivative accuracy:
 @testset "first derivative" begin
+  println("\nFirst derivatives:")
   for (ref_fn, cand_fn, case) in ((fd_dbesselk_dv, ad_dbesselk_dv, :standard),
-                                  (fd_dbesselkxv_dv, ad_dbesselkxv_dv, :rescale))
+                                  (fd_dbesselkxv_dv, ad_dbesselkxv_dv, :rescaled))
     amos_ref  = map(vx->ref_fn(vx[1], vx[2]), VX)
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
-    atols_f   = atols[amos_ref .<= 1000.0]
-    thresh    = case == :standard ? 1e-8 : 1e-5
-    @test maximum(atols_f) < thresh
+    ix        = findall(x-> x <= 1000.0, amos_ref)
+    thresh    = case == :standard ? 4e-9 : 8e-7
+    (maxerr, maxix) = findmax(abs, atols[ix])
+    (maxerr_v, maxerr_x) = VX[ix][maxix]
+    println("Case $case:")
+    println("worst (v,x):  ($maxerr_v, $maxerr_x)")
+    println("Ref value:     $(amos_ref[ix][maxix])")
+    println("Est value:     $(candidate[ix][maxix])")
+    println("Abs error:     $(round(maxerr, sigdigits=3))")
+    @test maxerr < thresh
   end
+  println()
 end
 
 # test second derivative accuracy:
 @testset "second derivative" begin
+  println("\nSecond derivatives:")
   for (ref_fn, cand_fn, case) in ((fd2_dbesselk_dv_dv, ad2_dbesselk_dv_dv, :standard),
-                                  (fd2_dbesselkxv_dv_dv, ad2_dbesselkxv_dv_dv, :rescale))
+                                  (fd2_dbesselkxv_dv_dv, ad2_dbesselkxv_dv_dv, :rescaled))
     amos_ref  = map(vx->ref_fn(vx[1], vx[2]), VX)
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
-    atols_f   = atols[amos_ref .<= 100.0]
-    thresh    = case == :standard ? 1e-6 : 1e-4
-    @test maximum(atols_f) < thresh
+    ix        = findall(x-> x <= 100.0, amos_ref)
+    thresh    = case == :standard ? 5e-7 : 2e-6
+    (maxerr, maxix) = findmax(abs, atols[ix])
+    (maxerr_v, maxerr_x) = VX[ix][maxix]
+    println("Case $case:")
+    println("worst (v,x):  ($maxerr_v, $maxerr_x)")
+    println("Ref value:     $(amos_ref[ix][maxix])")
+    println("Est value:     $(candidate[ix][maxix])")
+    println("Abs error:     $(round(maxerr, sigdigits=3))")
+    @test maxerr < thresh
   end
+  println()
 end
 
 # Testing the _xv versions really slows down the test script, and in general
