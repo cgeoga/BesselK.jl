@@ -11,6 +11,7 @@
 # good enough to declare total victory. I can only manage to match the speed of
 # AMOS in that part of the domain, too.
 function _besselk(v, x, maxit=100, tol=1e-12, order=6)
+  @assert x >= zero(x) DomainError("x needs to be non-negative.")
   iszero(x) && return Inf
   (real(v) < 0) && return _besselk(-v, x, maxit, tol, order)
   # TODO (cg 2021/11/16 16:44):  this is not the right way to test if you're
@@ -102,11 +103,13 @@ end
 # the argument is pretty small.
 function adbesselkxv(v, x, maxit=100, tol=1e-12, order=5)
   (iszero(v) && iszero(x)) && return Inf
+  is_ad = !(v isa AbstractFloat)
+  xcut  = is_ad ? 8.5 : 2.0
   if !isinteger(v) && (abs(x) <= 1e-8) # use Taylor at zero.
     return besselkxv_t0(v, x)
-  elseif (abs(x) < 2.0) && (v < 3.0) && !isnearint(v, 0.01)
+  elseif (x < xcut) && (v < 5.75) && !isnearint(v, 0.01)
     return _besselk_ser(v, x, maxit, tol, true)
-  elseif (abs(x) < 2.0)
+  elseif (x < xcut)
     return _besselk_temme(v, x, maxit, tol, true)
   else
     return adbesselk(v, x, maxit, tol, order)*(x^v)
