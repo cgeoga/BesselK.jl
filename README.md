@@ -52,6 +52,41 @@ using ForwardDiff, SpecialFunctions, BesselK
 @show ForwardDiff.derivative(_v->adbesselkxv(_v, x), v) # good to go.
 ```
 
+# A note to people coming here from the paper
+You'll see that this repo defines a great deal of specific derivative functions
+in the files in `./examples` and `./paperscripts`. **This is only because we
+specifically tested those quantities in the paper**. If you're just here to fit
+a Matern covariance function, then you should **not** be doing that. Your code
+should probably look more like this:
+```julia
+
+using ForwardDiff, BesselK
+
+function my_covariance_function(loc1, loc2, params)
+  ... # your awesome covariance function, presumably using adbesselk somewhere.
+end
+
+const my_data = ... # load in your data
+const my_locations = ... # load in your locations
+
+# Create your likelihood and use ForwardDiff for the grad and Hessian:
+function nll(params)
+  K = cholesky!(Symmetric([my_covariance_function(x, y, params) 
+                           for x in my_locations, y in my_locations]))
+  0.5*(logdet(K) + dot(my_data, K\my_data))
+end
+nllg(params) = ForwardDiff.gradient(nll, params)
+nllh(params) = ForwardDiff.hessian(nll, params)
+
+my_mle = some_optimizer(init_params, nll, nllg, nllh, ...)
+```
+Or something like that. You of course do not *have* to do it this way, and could
+manually implement the gradient and Hessian of the likelihood, and manual
+implementations will be faster if they are thoughtful enough. But what I mean to
+emphasize here is that in general you should *not* be doing manual chain rule or
+derivative computations of your covariance function itself. Let the AD handle
+that for you and enjoy the power that Julia's composability offers.
+
 # Limitations
 
 For the moment there are two primary limitations:
