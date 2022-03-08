@@ -56,8 +56,8 @@ using ForwardDiff, SpecialFunctions, BesselK
 You'll see that this repo defines a great deal of specific derivative functions
 in the files in `./examples` and `./paperscripts`. **This is only because we
 specifically tested those quantities in the paper**. If you're just here to fit
-a Matern covariance function, then you should **not** be doing that. Your code
-should probably look more like this:
+a Matern covariance function, then you should **not** be doing that. Your code,
+at least in the simplest case, should probably look more like this:
 ```julia
 
 using ForwardDiff, BesselK
