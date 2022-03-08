@@ -81,11 +81,14 @@ nllh(params) = ForwardDiff.hessian(nll, params)
 my_mle = some_optimizer(init_params, nll, nllg, nllh, ...)
 ```
 Or something like that. You of course do not *have* to do it this way, and could
-manually implement the gradient and Hessian of the likelihood, and manual
-implementations will be faster if they are thoughtful enough. But what I mean to
-emphasize here is that in general you should *not* be doing manual chain rule or
-derivative computations of your covariance function itself. Let the AD handle
-that for you and enjoy the power that Julia's composability offers.
+manually implement the gradient and Hessian of the likelihood after manually
+creating derivatives of the covariance function itself (see
+`./example/matern.jl` for a demo of that), and manual implementations,
+particularly for the Hessian, will be faster if they are thoughtful enough. But
+what I mean to emphasize here is that in general you should *not* be doing
+manual chain rule or derivative computations of your covariance function itself.
+Let the AD handle that for you and enjoy the power that Julia's composability
+offers.
 
 # Limitations
 
