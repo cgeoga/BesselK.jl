@@ -30,7 +30,7 @@ const PRANGE = (0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
 # otherwise, things look good: rtols can be larger than you might expect at
 # times, but that appears to be happening when both eigenvalues are exact to
 # more or less eps() precision where atol is more relevant anyway.
-#=
+#
 for (case, v, p) in Iterators.product((:GRID, :RAND), VRANGE, PRANGE)
   pts = (case == :GRID) ? GRIDPTS : RANDPTS
   M_amos   = assemble_matrix(matern_amos, pts, (1.0, p, v))
@@ -50,4 +50,4 @@ for (case, v, p) in Iterators.product((:GRID, :RAND), VRANGE, PRANGE)
     println("Cholesky for M_amos failed, skipping eigenvalue checks.")
   end
 end
-=#
+

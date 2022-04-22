@@ -14,12 +14,15 @@ const FDFAST(fn, x) = (fn(x+1e-6) - fn(x))/1e-6
 const FDACC  = central_fdm(10,1)
 const FD2    = central_fdm(2,1)
 
-
 # Note that this function uses the specialized method for (x^v)*besselk(v,x).
 # Which can actually be MORE accurate than using AMOS or whatever for very small
 # x. Pretty interesting. Even for pretty large order (say, v \approx 5), it is
 # pretty accurate. More importantly, it speeds up the AD a bit and makes THAT
 # more accurate.
+#
+# This version of the function, which the most accuracy-oriented users should
+# consider as a default, uses AMOS for normal evaluations and then switches to
+# our implementation for AD derivatives.
 function matern(x, y, params)
   (sg, rho, nu) = params
   dist = norm(x-y)
@@ -28,6 +31,17 @@ function matern(x, y, params)
   (sg*sg*(2^(1-nu))/gamma(nu))*BesselK.adbesselkxv(nu, arg)
 end
 
+# A pure BesselK.jl-backed version of the Matern covariance.
+function matern_us(x, y, params)
+  (sg, rho, nu) = params
+  dist = norm(x-y)
+  iszero(dist) && return sg*sg
+  arg = sqrt(2*nu)*dist/rho
+  (sg*sg*(2^(1-nu))/gamma(nu))*BesselK._besselkxv(nu, arg)
+end
+
+# A pure AMOS-backed version of the Matern covariance. Consequently, you'll have
+# to use finite difference derivatives of this one for order derivatives.
 @inline beskxv(v, x) = BesselK.besselk(v, x)*(x^v)
 function matern_amos(x, y, params)
   (sg, rho, nu) = params
