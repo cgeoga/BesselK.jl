@@ -13,9 +13,6 @@ end
 rbesselk(v,x) =  Float64(ArbNumerics.besselk(ArbFloat(v), ArbFloat(x)))
 abesselk(v,x) =  SpecialFunctions.besselk(v, x)
 
-const VGRID = range(0.25, 10.0, length=101) # to avoid integer v.
-const XGRID = range(0.0,  50.0, length=201)[2:end] # to avoid zero x.
-
 const BASELINE = [rbesselk(z[1], z[2]) for z in Iterators.product(VGRID, XGRID)]
 const AMOS     = [abesselk(z[1], z[2]) for z in Iterators.product(VGRID, XGRID)]
 const OURSOL   = [wbesselk(z[1], z[2]) for z in Iterators.product(VGRID, XGRID)]

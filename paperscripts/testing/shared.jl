@@ -2,6 +2,9 @@
 include("../../examples/matern.jl") 
 include("../plotting/gnuplot_utils.jl") 
 
+const VGRID = range(0.25, 10.0, length=101) # to hit "near-integer" v, which is the hardest.
+const XGRID = range(0.0,  30.0, length=201)[2:end]
+
 # First and second derivatives with FD:
 fdbesselkdv(v, x) = (besselk(v+1e-6, x) - besselk(v+1e-6, x))/1e-6
 fdbesselkdvdv(v, x) = (besselk(v+2e-6, x) - 2*besselk(v+1e-6, x) + besselk(v, x))/1e-12

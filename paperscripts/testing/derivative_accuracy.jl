@@ -4,25 +4,12 @@ include("shared.jl")
 
 const BIG_FD = central_fdm(10,1)
 
-function dwbesselk(v,x)
-  try
-    return ForwardDiff.derivative(_v->_besselk(_v,x), v)
-  catch
-    return NaN
-  end
-end
+dwbesselk(v,x) = ForwardDiff.derivative(_v->BesselK._besselk(_v,x,100,1e-12,false), v)
 
-function dbesselk(v, x)
-  BIG_FD(_v->besselk(_v,x), v)
-end
+dbesselk(v, x) = BIG_FD(_v->besselk(_v,x), v)
 
 const _h = 1e-6
-function fastfdbesselk(v, x)
-  (besselk(v+_h, x) - besselk(v, x))/_h
-end
-
-const VGRID = range(0.25, 10.0, length=101)        # to avoid integer v.
-const XGRID = range(0.0,  50.0, length=201)[2:end] # to avoid zero x.
+fastfdbesselk(v, x) = (besselk(v+_h, x) - besselk(v, x))/_h
 
 const BASELINE = [dbesselk(z[1], z[2])  for z in Iterators.product(VGRID, XGRID)]
 const OURSOL   = [dwbesselk(z[1], z[2]) for z in Iterators.product(VGRID, XGRID)]

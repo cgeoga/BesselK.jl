@@ -57,8 +57,8 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
   elseif abs(x) < 30.0
     return _besselk_asv(v,x,8) 
   else
-    if abs(v) > 1.5
-      return _besselk_asv(v,x,8) 
+    if abs(v) > 1.5 || is_ad
+      return _besselk_asv(v,x,5) 
     else
       return _besselk_as(v,x,order) 
     end

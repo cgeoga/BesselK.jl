@@ -17,7 +17,20 @@ function nll_replicates(parms, pts, datav)
   out
 end
 
-# For plotting a likelihood surface.
+# For plotting a likelihood surface. This uses the "profile likelihood", which
+# takes advantage of the fact that, given all other parameters, the
+# likelihood-miniziming variance can be expressed as
+#
+# sig_implied = dot(datav, K(sigma=1, other_parms...)\datav)/length(datav[1]).
+#
+# Since the full likelihood can be written with sigma pulled out of the matrix,
+# you can actually just plug this right back in to the normal Gaussian
+# likelihood and optimize all parameters at once still, but now you have a k-1
+# dimensional problem instead of a k-dimensional problem.
+#
+# See, for example, the definition at the top of the second column in page 5 in
+# the Geoga et al JCGS citation, although that's of course not the first time
+# the idea has been used here and it dates back to at least the 90s.
 function profile_nll_replicates(parms, pts, datav)
   n    = length(first(datav))
   _p   = @SVector [one(eltype(parms)), parms[1], parms[2]]
@@ -55,6 +68,8 @@ function high_fd_hessian(p)
   gfun = _p -> FiniteDifferences.grad(HIGHFD, _nll, _p)
   FiniteDifferences.jacobian(HIGHFD, gfun, p)[1]
 end
+
+no_hessian(x) = throw(error("This function should not have been called!"))
 
 grad_fd!(p, store) = gradient_replicates!(store, FD_DFNS, p, PTS, SIMS)
 grad_ad!(p, store) = ForwardDiff.gradient!(store, _nll, p)

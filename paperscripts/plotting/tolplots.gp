@@ -21,6 +21,8 @@ set ylabel '$\nu$'
 
 
 # Function absolute tolerances:
+load 'cmocean_deep.pal'
+set palette negative
 set cbrange[1e-20:1e-1]
 do for [case in "amos ours"] {
   set output "atols_".case.".tex"
@@ -30,12 +32,16 @@ do for [case in "amos ours"] {
 }
 
 # Derivative absolute tolerances:
-set cbrange [1e-36:100000]
+set cbrange [1e-20:100000]
 do for [case in "fd ad fdad"] {
   if (case eq "fdad"){
+    load 'cmocean_balance.pal'
+    set palette positive
     unset logscale cb
     set cbrange [-10:10]
   }else{
+    load 'cmocean_deep.pal'
+    set palette negative
     set logscale cb
   }
   set output "atols_deriv_".case.".tex"
@@ -45,12 +51,16 @@ do for [case in "fd ad fdad"] {
 }
 
 # second deriv absolute tolerance:
-set cbrange [2e-40:2e12]
+set cbrange [1e-20:2e12]
 do for [case in "fd ad fdad"] {
   if (case eq "fdad"){
+    load 'cmocean_balance.pal'
+    set palette positive
     unset logscale cb
     set cbrange [-10:10]
   }else{
+    load 'cmocean_deep.pal'
+    set palette negative
     set logscale cb
   }
   set output "atols_deriv2_".case.".tex"

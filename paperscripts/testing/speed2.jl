@@ -27,10 +27,10 @@ const PRANGE = (0.01, 1.0, 100.0)
 for (j, (v, p)) in enumerate(Iterators.product(VRANGE, PRANGE))
   _p  = pv(1.0, p, v)
   # test 1: assembly time.
-  t_u = @belapsed assemble_matrix(matern,      $PTS, $_p) samples=8
+  t_u = @belapsed assemble_matrix(matern_us,   $PTS, $_p) samples=8
   t_a = @belapsed assemble_matrix(matern_amos, $PTS, $_p) samples=8
   # test 2: Cholesky success or failure:
-  (s_u, em_u, ld_u) = checkcovmat(matern,      p, v)
+  (s_u, em_u, ld_u) = checkcovmat(matern_us,   p, v)
   (s_a, em_a, ld_a) = checkcovmat(matern_amos, p, v)
   # PRINTING:
   # (v,p) pair

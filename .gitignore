@@ -3,5 +3,6 @@
 *.serialized
 *.hdf5
 *.pdf
+*.txt
 debug*.jl
 Manifest.toml
