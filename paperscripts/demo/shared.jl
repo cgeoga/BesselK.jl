@@ -53,6 +53,16 @@ const SIMS  = let K = Symmetric([matern(x, y, TRU_P) for x in PTS, y in PTS])
   [Kf.L*randn(SEED, size(Kf, 2)) for _ in 1:N_REP]
 end
 
+# A second simulation of a single draw at more points for the likelihood
+# surface:
+const N_DAT_SURF = 1600
+const TRU_P_SURF = @SVector [1.5, 0.5, 1.3]
+const PTS_SURF   = [SVector{2,Float64}(rand(SEED, 2)...) for _ in 1:N_DAT_SURF]
+const SIM_SURF   = let K = Symmetric([matern(x, y, TRU_P_SURF) for x in PTS_SURF, y in PTS_SURF])
+  Kf = cholesky(K)
+  Kf.L*randn(SEED, size(Kf, 2))
+end
+
 _nll(p)  = nll_replicates(p, PTS, SIMS)
 _nllh(p) = ForwardDiff.hessian(_nll, p)
 

@@ -4,5 +4,6 @@
 *.hdf5
 *.pdf
 *.txt
+*.dat
 debug*.jl
 Manifest.toml
