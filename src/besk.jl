@@ -60,7 +60,11 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
     if abs(v) > 1.5 || is_ad
       return _besselk_asv(v,x,6) 
     else
-      return _besselk_as(v,x,order) 
+      if is_ad
+        return _besselk_as(v,x,order) 
+      else
+        return _besselk_as(v,x,order,false) 
+      end
     end
   end
 end

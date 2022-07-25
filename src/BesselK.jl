@@ -1,8 +1,11 @@
 module BesselK
 
-  using LinearAlgebra, SpecialFunctions, Polynomials
+  using LinearAlgebra, SpecialFunctions, Polynomials#, ForwardDiff
 
   export adbesselk, adbesselkxv
+
+  # This is probably bad to include here, but the method error seems to happen a lot without it:
+  #Base.floatmax(x::Dual{T,V,N}) where{T,V,N} = floatmax(V)
 
   include("besk_ser.jl")   # enhanced direct series. The workhorse for small-ish args.
   include("besk_as.jl")    # asymptotic expansion for large arg.
