@@ -106,6 +106,31 @@ For the moment there are two primary limitations:
   level of derivative those local polynomials won't give accurate partial
   information.
 
+# Also consider: `Bessels.jl`
+
+This software package was written with the pretty specific goal of computing
+derivatives of Kᵥ(x) with respect to the order using `ForwardDiff.jl`. While it
+is in general a bit faster than AMOS, we give up a few digits of accuracy here
+and there in the interest of better and faster derivatives. If you just want the
+fastest possible Kᵥ(x), then you would probably be better off using
+[`Bessels.jl`](https://github.com/heltonmc/Bessels.jl). At the time of writing
+it only offers Kᵥ(x) for integer orders, but non-integer orders will be
+available soon enough I'm sure. While differentiability is on the roadmap,
+they more explicitly target writing the fastest possible base Kᵥ(x), and what
+they offer is seriously fast.
+
+There is and will be some cross-pollination between the two software projects,
+and at some point I expect to switch `adbesselk` to use `Bessels.besselk` where
+possible instead of `SpecialFunctions.besselk`. And  at some point if the order
+derivatives become available there might not be much reason to use this package
+instead of that one, although I think for the moment if you want to fit a Matern
+covariance function you probably need to be here.
+
+On the topic, the following methods are lifted directly from `Bessels.jl` so
+that we can go fast in the meantime:
+
+* Integer order `\nu` when `\nu isa AbstractFloat`.
+
 # Implementation details
 
 See the reference for an entire paper discussing the implementation. But in a
@@ -125,6 +150,19 @@ code look a bit disorganized or inconsistent, but to my knowledge it is all
 necessary. If somebody looking at the source finds a simplification, I would
 love to see it, either in terms of an issue or a PR or an email or a patch file
 or anything. 
+
+A to-do item (written 2022/07/27), I think, is to re-organize the code a bit so
+that there is a function `_besselk_vdual` that only gets called when `v isa
+ForwardDiff.Dual` and a function `_besselk_abstractfloat` when `v isa
+AbstractFloat`. For the initial release, `adbesselk` always defaulted to
+`SpecialFunctions.besselk` where possible to give people what they expected and
+every digit possible. But as `Bessels.jl` matures, I think lifting at least a
+few of those routines in the interim is appealing but means that there is
+awkwardly a lot of control flow in `BesselK._besselk` as well as
+`BesselK.adbesselk` now. Probably better to compartmentalize those two domain
+partitionings. Defaulting to `Bessels.besselk` when `v isa
+AbstractFloat` is probably a good intermediate goal once it's ready for all
+arguments.
 
 # Citation
 

@@ -11,6 +11,7 @@ module BesselK
   include("besk_as.jl")    # asymptotic expansion for large arg.
   include("besk_asv.jl")   # uniform expansion for large order.
   include("besk_temme.jl") # Temme recurrence series for small-ish args. For AD.
+  include("besk_int.jl")   # New addition courtesy of Bessels.jl, see file for attribution
   include("besk.jl")       # putting it all together with appropriate branching.
 
 end # module

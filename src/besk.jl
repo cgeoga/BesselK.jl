@@ -29,10 +29,10 @@ function _besselk(v, x, maxit=100, tol=1e-12, order=6)
   # What would really be nice is some way if checking if (v isa Dual{T,V,N}
   # where T<: Dual). But again, I'm worried about getting too stuck with
   # ForwardDiff.
-  if isinteger(v-1/2) && (x < 8.5)
-    if is_ad
+  if isinteger(v-1/2)# && (x < 8.5)
+    if is_ad && (x < 8.5)
       return _besselk_ser(v, x, maxit, tol, false) 
-    else
+    elseif !is_ad
       # Probably don't need the is_ad correction here.
       return _besselk_as(v, x, Int(ceil(v)), false) 
     end
@@ -76,7 +76,11 @@ end
 # Calling it besselk and not exporting it seems reasonable enough, but users
 # will obviously want to import it. So not obvious what's best to do here.
 function adbesselk(v, x, maxit=100, tol=1e-12, order=5)
-  if v isa AbstractFloat
+  if (v isa AbstractFloat) && isinteger(v) && in(typeof(x), (Float32, Float64))
+    return _besselk_int(v, x)
+  elseif (v isa AbstractFloat) && isinteger(v-1/2) && in(typeof(x), (Float32, Float64))
+    return _besselk_halfint(v, x)
+  elseif v isa AbstractFloat
     SpecialFunctions.besselk(v, x)
   else
     _besselk(v, x, maxit, tol)

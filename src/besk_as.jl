@@ -94,6 +94,20 @@ function _besselk_as(v, x, order, use_remainder=true, modify=false)
   else
     mulval = exp(-x)
   end
-  return sqrt(pi/(x*twox))*mulval*ser
+  sqrt(pi/(x*twox))*mulval*ser
 end
 
+# A refined version of my (CG) base version, thanks to Michael Helton and Oscar Smith (see https://github.com/heltonmc/Bessels.jl/issues/25)
+const SQRT_PID2(::Type{Float64}) = 1.2533141373155003
+function _besselk_halfint(v::T, x) where{T}
+    v       = abs(v)
+    invx    = inv(x)
+    b0 = b1 = SQRT_PID2(Float64)*sqrt(invx)*exp(-x) 
+    twodx   = 2*invx
+    _v      = T(1/2)
+    while _v < v
+      b0, b1 = b1, muladd(b1, twodx*_v, b0)
+      _v    += one(T)
+    end
+    b1
+end
