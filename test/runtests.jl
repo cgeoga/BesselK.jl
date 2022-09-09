@@ -17,17 +17,17 @@ fd2_dbesselk_dv_dv(v, x) = REF_FD2(_v->besselk(_v, x), v)
 fd_dbesselkxv_dv(v, x) = REF_FD1(_v->besselkxv(_v, x), v)
 fd2_dbesselkxv_dv_dv(v, x) = REF_FD2(_v->besselkxv(_v, x), v)
 
-ad_dbesselk_dv(v, x) = ForwardDiff.derivative(_v->BesselK.adbesselk(_v, x), v)
+ad_dbesselk_dv(v, x) = ForwardDiff.derivative(_v->adbesselk(_v, x), v)
 ad2_dbesselk_dv_dv(v, x) = ForwardDiff.derivative(_v->ad_dbesselk_dv(_v, x), v)
 
-ad_dbesselkxv_dv(v, x) = ForwardDiff.derivative(_v->BesselK.adbesselkxv(_v, x), v)
+ad_dbesselkxv_dv(v, x) = ForwardDiff.derivative(_v->adbesselkxv(_v, x), v)
 ad2_dbesselkxv_dv_dv(v, x) = ForwardDiff.derivative(_v->ad_dbesselkxv_dv(_v, x), v)
 
 # direct accuracy:
 @testset "direct eval" begin
   println("\nDirect evaluations:")
-  for (ref_fn, cand_fn, case) in ((besselk,   BesselK._besselk, :standard),
-                                  (besselkxv, BesselK.adbesselkxv, :rescaled))
+  for (ref_fn, cand_fn, case) in ((besselk,   adbesselk,   :standard),
+                                  (besselkxv, adbesselkxv, :rescaled))
     amos_ref  = map(vx->ref_fn(vx[1], vx[2]), VX)
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
@@ -54,7 +54,7 @@ end
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
     ix        = findall(x-> x <= 1000.0, amos_ref)
-    thresh    = case == :standard ? 4e-9 : 8e-7
+    thresh    = case == :standard ? 4e-9 : 2e-6
     (maxerr, maxix) = findmax(abs, atols[ix])
     (maxerr_v, maxerr_x) = VX[ix][maxix]
     println("Case $case:")
@@ -76,7 +76,7 @@ end
     candidate = map(vx->cand_fn(vx[1], vx[2]), VX)
     atols     = map(a_c->atolfun(a_c[1], a_c[2]), zip(amos_ref, candidate))
     ix        = findall(x-> x <= 100.0, amos_ref)
-    thresh    = case == :standard ? 5e-7 : 2e-6
+    thresh    = case == :standard ? 5e-7 : 5e-6
     (maxerr, maxix) = findmax(abs, atols[ix])
     (maxerr_v, maxerr_x) = VX[ix][maxix]
     println("Case $case:")

@@ -17,8 +17,8 @@ function _besselk_ser(v, x, maxit, tol, modify)
     xd2_v    = exp(v*lxd2)
     xd2_nv   = exp(-v*lxd2)
   end
-  gam_v    = gamma(v)
-  gam_nv   = gamma(-v)
+  gam_v    = Bessels.gamma(v)
+  gam_nv   = Bessels.gamma(-v)
   gam_1mv  = -gam_nv*v # == gamma(one(T)-v)
   gam_1mnv = gam_v*v   # == gamma(one(T)+v)
   xd2_pow  = oneT
@@ -41,7 +41,7 @@ function _besselk_ser(v, x, maxit, tol, modify)
     (gpv, gmv) = (gpv*(oneT+v+floatk), gmv*(oneT-v+floatk)) 
     xd2_pow *= xd22
     fact_k  *= (floatk+1)
-    floatk  += 1.0
+    floatk  += T(1)
   end
   throw(error("$maxit iterations reached without achieving atol $tol."))
 end
