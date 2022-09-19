@@ -1,7 +1,7 @@
 name = "BesselK"
 uuid = "432ab697-7a72-484f-bc4a-bc531f5c819b"
 authors = ["Chris Geoga <christopher.geoga@rutgers.edu>"]
-version = "0.5.0"
+version = "0.5.1"
 
 [deps]
 Bessels = "0e736298-9ec6-45e8-9647-e4fc86a2fe38"
@@ -11,4 +11,4 @@ Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
 [compat]
 Polynomials = "2, 3"
 julia = "1"
-Bessels = "0.2"
+Bessels = "0.2.1"
