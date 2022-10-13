@@ -16,6 +16,6 @@ function matern(x, y, params)
   dist = norm(x-y)
   iszero(dist) && return sg^2
   arg = sqrt(2*nu)*dist/rho
-  (sg*sg*(2^(1-nu))/Bessels.gamma(nu))*adbesselkxv(nu, arg)
+  (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
 end
 

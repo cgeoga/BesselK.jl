@@ -17,8 +17,8 @@ function _besselk_ser(v, x, maxit, tol, modify)
     xd2_v    = exp(v*lxd2)
     xd2_nv   = exp(-v*lxd2)
   end
-  gam_v    = Bessels.gamma(v)
-  gam_nv   = Bessels.gamma(-v)
+  gam_v    = _gamma(v)
+  gam_nv   = _gamma(-v)
   gam_1mv  = -gam_nv*v # == gamma(one(T)-v)
   gam_1mnv = gam_v*v   # == gamma(one(T)+v)
   xd2_pow  = oneT

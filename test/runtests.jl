@@ -95,10 +95,10 @@ end
   VGRID_ALLOC = (0.25, 1.0-1e-8, 1.0, 1.5, 2.1, 3.0, 3.5, 4.8)
   XGRID_ALLOC = range(0.0, 50.0, length=11)[2:end] 
   VX_ALLOC    = collect(Iterators.product(VGRID_ALLOC, XGRID_ALLOC))
-  ad_alloc_test(v,x)     = @ballocated ad_dbesselk_dv($v,$x) samples=5
-  ad2_alloc_test(v,x)    = @ballocated ad2_dbesselk_dv_dv($v,$x) samples=5
-  ad_alloc_test_xv(v,x)  = @ballocated ad_dbesselkxv_dv($v,$x) samples=5
-  ad2_alloc_test_xv(v,x) = @ballocated ad2_dbesselkxv_dv_dv($v,$x) samples=5
+  ad_alloc_test(v,x)     = @ballocated ad_dbesselk_dv($v,$x) samples=1
+  ad2_alloc_test(v,x)    = @ballocated ad2_dbesselk_dv_dv($v,$x) samples=1
+  ad_alloc_test_xv(v,x)  = @ballocated ad_dbesselkxv_dv($v,$x) samples=1
+  ad2_alloc_test_xv(v,x) = @ballocated ad2_dbesselkxv_dv_dv($v,$x) samples=1
   ad_allocs  = map(vx->ad_alloc_test(vx[1], vx[2]), VX_ALLOC)
   ad2_allocs = map(vx->ad2_alloc_test(vx[1], vx[2]), VX_ALLOC)
   ad_allocs_xv  = map(vx->ad_alloc_test_xv(vx[1], vx[2]), VX_ALLOC)
