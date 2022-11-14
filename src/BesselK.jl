@@ -9,7 +9,7 @@ module BesselK
   # check that the value AND partials of x are zero. Conceptually, I'm
   # sympathetic that this is the more correct choice. It just doesn't quite work
   # for the way this code needs to branch.
-  _iszero(x) = ifelse(0.0 <= x <= 0.0, true, false)
+  _iszero(x) = (0 <= x) & (x <= 0)
 
   include("gamma.jl")      # gamma function, for the moment ripped from Bessels.jl
   include("besk_ser.jl")   # enhanced direct series. The workhorse for small-ish args.
