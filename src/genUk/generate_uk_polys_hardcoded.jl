@@ -1,13 +1,6 @@
 
 using Polynomials
 
-# If you don't do the branch at j == 9 or so, you will totally blow up
-# compilation time. Really trying to keep that under control while still
-# squeezing out all allocations.
-#
-@inline _eta(z) = sqrt(1+z*z)+log(z/(1+sqrt(1+z*z)))
-@inline _p(z)   = inv(sqrt(1+z*z))
-
 function Uk_polynomials(max_order)
   P0   = Polynomial([1.0])
   out  = [P0]
