@@ -14,7 +14,7 @@ For more information, see Stein (1999), Interpolation of Spatial Data: Some Theo
 function matern(x, y, params)
   (sg, rho, nu) = (params[1], params[2], params[3])
   dist = norm(x-y)
-  iszero(dist) && return sg^2
+  _iszero(dist) && return sg^2
   arg = sqrt(2*nu)*dist/rho
   (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
 end

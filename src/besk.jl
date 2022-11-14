@@ -9,11 +9,11 @@ function _besselk(v, x, maxit, tol, order)
   elseif abs(x) < 8.5
     return _besselk_temme(v, x, maxit, tol, false)
   elseif abs(x) < 15.0
-    return _besselk_asv(v, x, 12)
+    return _besselk_asv(v, x, Val(12), Val(false))
   elseif abs(x) < 30.0
-    return _besselk_asv(v, x, 8)
+    return _besselk_asv(v, x, Val(8),  Val(false))
   elseif abs(v) > 1.5
-    return _besselk_asv(v, x, 6)
+    return _besselk_asv(v, x, Val(6),  Val(false))
   else
     return _besselk_as(v, x, order)
   end
@@ -28,11 +28,11 @@ function _besselkxv(v, x, maxit, tol, order)
   elseif abs(x) < 6.0
     return _besselk_temme(v, x, maxit, tol, true)
   elseif abs(x) < 15.0
-    return _besselk_asv(v, x, 12, true)
+    return _besselk_asv(v, x, Val(12), Val(true))
   elseif abs(x) < 30.0
-    return _besselk_asv(v, x, 8, true)
+    return _besselk_asv(v, x, Val(8), Val(true))
   elseif abs(v) > 1.5
-    return _besselk_asv(v, x, 6, true)
+    return _besselk_asv(v, x, Val(6), Val(true))
   else
     return _besselk_as(v, x, order)*exp(v*log(x)) # temporary, until float pows in 1.9.
   end

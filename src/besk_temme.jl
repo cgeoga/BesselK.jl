@@ -1,5 +1,5 @@
 
-const _GA         = MathConstants.γ       # because I don't like unicode...
+const _GA        = MathConstants.γ       # because I don't like unicode...
 const QUADGAMMA1 =  -2.40411380631918857 # ψ^(2)(1)
 const HEXGAMMA1  = -24.88626612344087823 # ψ^(4)(1)
 
@@ -29,7 +29,7 @@ const SHCOEF = (1, 0, 1/6, 0, 1/120, 0, 1/5040, 0, 1/362880)
 
 # TODO: there is still a problem when v is not zero but z is zero. The NaN might
 # be mathematically correct, and it isn't a branch that adbesselkxv hits.
-@inline function f0_expansion0(v, z, modify)
+@inline function f0_expansion0(v::V, z, modify) where{V}
   _t  = tp_taylor0(v)
   _g1 = g1_taylor0(v)
   _g2 = g2_taylor0(v)
@@ -40,7 +40,7 @@ const SHCOEF = (1, 0, 1/6, 0, 1/120, 0, 1/5040, 0, 1/362880)
     _sh = sh_taylor0(mu)*log(2/z)
   else
     _cm = coshmuxv(v, z)
-    if iszero(v)
+    if _iszero(v)
       # Because of the branching here, if v is zero, then I know that z is NOT zero. 
       mu  = v*log(2/z)
       _sh = (z^v)*sh_taylor0(mu)*log(2/z)
@@ -130,7 +130,7 @@ function temme_pair(v, z, maxit, tol, modify=false)
     _sm = sinhmuxv(v, z)
   end
   # One more branch for f0, which is to check if v is near zero or z is near two.
-  if iszero(z) && modify
+  if _iszero(z) && modify
     f0 = one(z)
   else
     if abs(v) < 0.001
@@ -173,7 +173,7 @@ function temme_pair(v, z, maxit, tol, modify=false)
     factk   *= _floatk
     _z      *= _zd4
   end
-  throw(error("Term tolerance $tol not reached in $maxit iters.")) 
+  throw(error("Term tolerance $tol not reached in $maxit iters for (v,z) = ($v, $z).")) 
 end
 
 # NOTE: In the modified scaling of (x^v)*besselk(v,x), there is a problem for
@@ -199,7 +199,7 @@ function _besselk_temme(v, z, maxit, tol, mod)
     # propagation of NaNs in AD.
     #
     # a slightly different recurrence for (x^v)*besselk(v,x).
-    if iszero(z)
+    if _iszero(z)
       # special case for z=0:
       for _ in 1:(Int(_p)-1)
         kvp2 = twov*(_v+one(v))*kvp1
