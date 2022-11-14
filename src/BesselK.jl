@@ -1,17 +1,15 @@
 
 module BesselK
 
-  using LinearAlgebra, Bessels, ForwardDiff
+  using Bessels
 
   export adbesselk, adbesselkxv, matern
 
-  # Here's an ugly work-around since ForwardDiff#481 got merged:
-  _iszero(x) = iszero(x)
-  _iszero(x::ForwardDiff.Dual) = _iszero(ForwardDiff.value(x))
-
-  # This is probably bad to include here, but the method error seems to happen a
-  # lot without it:
-  #Base.floatmax(x::Dual{T,V,N}) where{T,V,N} = floatmax(V)
+  # Here's a work-around since ForwardDiff#481 got merged, making iszero(x)
+  # check that the value AND partials of x are zero. Conceptually, I'm
+  # sympathetic that this is the more correct choice. It just doesn't quite work
+  # for the way this code needs to branch.
+  _iszero(x) = ifelse(0.0 <= x <= 0.0, true, false)
 
   include("gamma.jl")      # gamma function, for the moment ripped from Bessels.jl
   include("besk_ser.jl")   # enhanced direct series. The workhorse for small-ish args.
