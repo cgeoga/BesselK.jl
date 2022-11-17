@@ -46,6 +46,9 @@ adbesselk(v, x) = _besselk(v, x, 100, 1e-12, 6)
 # I'm going back to this, which unfortunately is still NaN at zero, even though
 # that value is well-defined. I suppose I could put the limit in if x is zero,
 # but I don't love that.
-adbesselkxv(v::AbstractFloat, x::AbstractFloat) = Bessels.besselk(v, x)*(x^v)
-adbesselkxv(v, x) = _besselkxv(v, x, 100, 1e-12, 6)
+function adbesselkxv(v::AbstractFloat, x::AbstractFloat) 
+  iszero(x) && return _gamma(v)*2^(v-1)
+  Bessels.besselk(v, x)*(x^v)
+end
+adbesselkxv(v, x) = _iszero(x) ? _gamma(v)*2^(v-1) : _besselkxv(v, x, 100, 1e-12, 6)
 
