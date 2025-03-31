@@ -40,7 +40,7 @@ const SHCOEF = (1, 0, 1/6, 0, 1/120, 0, 1/5040, 0, 1/362880)
     _sh = sh_taylor0(mu)*log(2/z)
   else
     _cm = coshmuxv(v, z)
-    if _iszero(v)
+    if is_primal_zero(v)
       # Because of the branching here, if v is zero, then I know that z is NOT zero. 
       mu  = v*log(2/z)
       _sh = (z^v)*sh_taylor0(mu)*log(2/z)
@@ -130,7 +130,7 @@ function temme_pair(v, z, maxit, tol, modify=false)
     _sm = sinhmuxv(v, z)
   end
   # One more branch for f0, which is to check if v is near zero or z is near two.
-  if _iszero(z) && modify
+  if is_primal_zero(z) && modify
     f0 = one(z)
   else
     if abs(v) < 0.001
@@ -199,7 +199,7 @@ function _besselk_temme(v, z, maxit, tol, mod)
     # propagation of NaNs in AD.
     #
     # a slightly different recurrence for (x^v)*besselk(v,x).
-    if _iszero(z)
+    if is_primal_zero(z)
       # special case for z=0:
       for _ in 1:(Int(_p)-1)
         kvp2 = twov*(_v+one(v))*kvp1

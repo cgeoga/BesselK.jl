@@ -50,5 +50,5 @@ function adbesselkxv(v::AbstractFloat, x::AbstractFloat)
   iszero(x) && return _gamma(v)*2^(v-1)
   Bessels.besselk(v, x)*(x^v)
 end
-adbesselkxv(v, x) = _iszero(x) ? _gamma(v)*2^(v-1) : _besselkxv(v, x, 100, 1e-12, 6)
+adbesselkxv(v, x) = is_primal_zero(x) ? _gamma(v)*2^(v-1) : _besselkxv(v, x, 100, 1e-12, 6)
 

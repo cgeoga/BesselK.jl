@@ -5,11 +5,8 @@ module BesselK
 
   export adbesselk, adbesselkxv, matern
 
-  # Here's a work-around since ForwardDiff#481 got merged, making iszero(x)
-  # check that the value AND partials of x are zero. Conceptually, I'm
-  # sympathetic that this is the more correct choice. It just doesn't quite work
-  # for the way this code needs to branch.
-  _iszero(x) = (0 <= x) & (x <= 0)
+  # A special method that has an extension for ForwardDiff to handle x::Dual.
+  is_primal_zero(x::Real) = iszero(x)
 
   include("gamma.jl")      # gamma function, for the moment ripped from Bessels.jl
   include("besk_ser.jl")   # enhanced direct series. The workhorse for small-ish args.
