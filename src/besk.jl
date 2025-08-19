@@ -38,7 +38,8 @@ function _besselkxv(v, x, maxit, tol, order)
   end
 end
 
-adbesselk(v::AbstractFloat, x::AbstractFloat) = Bessels.besselk(v, x)
+adbesselk(v::Float64, x::Float64) = Bessels.besselk(v, x)
+adbesselk(v::Float32, x::Float32) = Bessels.besselk(v, x)
 adbesselk(v, x) = _besselk(v, x, 100, 1e-12, 6)
 
 # TODO (cg 2022/09/09 12:22): with newer julia and/or package versions, I'm

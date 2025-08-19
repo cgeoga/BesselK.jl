@@ -21,3 +21,10 @@ function matern(x, y, params)
   (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
 end
 
+function matern(dist, params)
+  (sg, rho, nu) = (params[1], params[2], params[3])
+  is_primal_zero(dist) && return sg^2
+  arg = sqrt(2*nu)*dist/rho
+  (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
+end
+
