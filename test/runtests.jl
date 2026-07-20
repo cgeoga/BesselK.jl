@@ -109,3 +109,32 @@ end
   @test all(iszero, ad2_allocs_xv)
 end
 
+
+@testset "intermediate Chebyshev" begin
+  xgrid = range(0.5, 20.0, length=79)
+  vx = collect(Iterators.product(VGRID, xgrid))
+
+  for (modify, threshold) in ((false, 5e-11),)
+    refs = map(vx) do (v, x)
+      k = besselk(v, x)
+      modify ? k*x^v : k
+    end
+    vals = map(vx) do (v, x)
+      BesselK._besselk_intermediate(v, x, modify)
+    end
+    errors = map(a_c->atolfun(a_c[1], a_c[2]), zip(refs, vals))
+    ix = findall(x->x <= 1000.0, refs)
+    maxerr = maximum(abs, errors[ix])
+    @test maxerr < threshold
+  end
+
+  for v in (0.25, 0.5, 1.0, 2.0, 4.6, 10.0)
+    for boundary in (0.5, 4.0, 20.0)
+      for x in (prevfloat(boundary), boundary, nextfloat(boundary))
+        ref = besselk(v, x)
+        val = BesselK._besselk(v, x, 100, 1e-12, 6)
+        @test isapprox(val, ref; atol=5e-11, rtol=5e-13)
+      end
+    end
+  end
+end
