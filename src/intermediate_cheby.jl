@@ -1,6 +1,3 @@
-# This file is generated from the high-precision tables in BesselKApprox.jl.
-# It intentionally contains no imports and performs no table construction.
-
 const _INTERMEDIATE_SMALL_DELTA = 0.005
 const _INTERMEDIATE_SMALL_XLO = 0.0
 const _INTERMEDIATE_SMALL_XHI = 1.010025
