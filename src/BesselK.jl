@@ -1,8 +1,6 @@
 
 module BesselK
 
-  using Bessels
-
   export adbesselk, adbesselkxv, matern
 
   # A special method that has an extension for ForwardDiff to handle x::Dual.

@@ -37,17 +37,6 @@ function _besselkxv(v, x, maxit, tol, order)
   end
 end
 
-adbesselk(v::Float64, x::Float64) = Bessels.besselk(v, x)
-adbesselk(v::Float32, x::Float32) = Bessels.besselk(v, x)
 adbesselk(v, x) = _besselk(v, x, 100, 1e-12, 6)
 
-# TODO (cg 2022/09/09 12:22): with newer julia and/or package versions, I'm
-# getting allocations in the second derivative if I'm not careful. So for now
-# I'm going back to this, which unfortunately is still NaN at zero, even though
-# that value is well-defined. I suppose I could put the limit in if x is zero,
-# but I don't love that.
-function adbesselkxv(v::AbstractFloat, x::AbstractFloat)
-  iszero(x) && return _gamma(v)*2^(v-1)
-  Bessels.besselk(v, x)*(x^v)
-end
 adbesselkxv(v, x) = is_primal_zero(x) ? _gamma(v)*2^(v-1) : _besselkxv(v, x, 100, 1e-12, 6)

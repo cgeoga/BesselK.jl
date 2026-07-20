@@ -1,6 +1,10 @@
 
 # BesselK.jl
 
+**NOTE:** The main branch is undergoing a significant re-write at the moment, so
+please be sure to `]add` the latest tagged release and not `BesselK#main` unless
+you are developing it.
+
 [build-latest-img]: https://github.com/cgeoga/BesselK.jl/workflows/CI/badge.svg
 [build-url]: https://github.com/cgeoga/BesselK.jl/actions?query=workflow
 

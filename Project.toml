@@ -1,10 +1,7 @@
 name = "BesselK"
 uuid = "432ab697-7a72-484f-bc4a-bc531f5c819b"
-authors = ["Chris Geoga <christopher.geoga@rutgers.edu>"]
 version = "0.5.7"
-
-[deps]
-Bessels = "0e736298-9ec6-45e8-9647-e4fc86a2fe38"
+authors = ["Chris Geoga <christopher.geoga@rutgers.edu>"]
 
 [weakdeps]
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
@@ -13,7 +10,5 @@ ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 BesselKForwardDiffExt = "ForwardDiff"
 
 [compat]
-Bessels = "0.2.8"
-julia = "1"
 ForwardDiff = "1"
-
+julia = "1"

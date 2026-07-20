@@ -89,9 +89,7 @@ end
   println()
 end
 
-# Testing the _xv versions really slows down the test script, and in general
-# there are no no routines.
-@testset "confirm no allocations" begin
+@testset "no allocations" begin
   VGRID_ALLOC = (0.25, 1.0-1e-8, 1.0, 1.5, 2.1, 3.0, 3.5, 4.8)
   XGRID_ALLOC = range(0.0, 50.0, length=11)[2:end] 
   VX_ALLOC    = collect(Iterators.product(VGRID_ALLOC, XGRID_ALLOC))
