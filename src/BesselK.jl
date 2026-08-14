@@ -14,7 +14,8 @@ module BesselK
   include("besk_asv.jl")   # uniform expansion for large order.
   include("besk_temme.jl") # Temme recurrence series for small-ish args. For AD.
   include("intermediate_cheby.jl")
-  include("besk.jl")       # putting it all together with appropriate branching.
+  include("small_x.jl")
+    include("besk.jl")       # putting it all together with appropriate branching.
   include("matern.jl")     # a basic Matern covariance function
 
 end 
