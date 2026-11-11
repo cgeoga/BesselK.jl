@@ -49,11 +49,11 @@ const LARGE_B = (
     10.005952380952381,
 )
 
-@inline function series(::Val{N}, u4::NTuple{2,T}, invx) where {N,T}
+@inline function series(::Val{N}, u4::NTuple{2, T}, invx) where {N, T}
     u1, u2 = u4
     p1 = 1.0
     p2 = 1.0
-    @inbounds for i in N-1:-1:1
+    @inbounds for i in (N - 1):-1:1
         ai = LARGE_A[i]
         bi = LARGE_B[i]
         p1 = muladd(muladd(u1, ai, -bi) * invx, p1, 1.0)
@@ -71,7 +71,7 @@ end
 end
 
 @inline function besselkx_large_pair(a, x)
-    if x < 30.0
+    return if x < 30.0
         asexp_fixed_order(Val(22), a, x)
     elseif x < 100.0
         asexp_fixed_order(Val(16), a, x)

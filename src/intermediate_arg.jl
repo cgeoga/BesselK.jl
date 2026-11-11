@@ -144,7 +144,7 @@ const INT_SQRT_PID2 = 1.2533141373155003
 # (`map` over the tuples, not a closure over b1/b2: closures capturing variables that a
 # loop reassigns get boxed in Julia.)
 # `c[k]` is the W-tuple of row k (k = 1 is the lowest degree).
-@inline function ycl(t, c::NTuple{R,NTuple{W,T}}) where {R,W,T}
+@inline function ycl(t, c::NTuple{R, NTuple{W, T}}) where {R, W, T}
     t2 = t + t
     b1 = ntuple(_ -> 0.0, Val(W))
     b2 = b1
@@ -180,8 +180,10 @@ end
     end
     s = z * INT_SQRT_PID2
     c1 = col[1]
-    return (s * muladd(su[1], b1[1], c1 - b2[1]),
-            s * muladd(su[2], b1[2], c1 - b2[2]))
+    return (
+        s * muladd(su[1], b1[1], c1 - b2[1]),
+        s * muladd(su[2], b1[2], c1 - b2[2]),
+    )
 end
 
 # Branch-free table index in 1:4.

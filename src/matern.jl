@@ -1,15 +1,14 @@
-
 # A standard Matern covariance function. This is not the best parameterization,
 # but it is the most popular, so here we are.
 
-_norm(t) = sqrt(sum(z->z*z, t))
+_norm(t) = sqrt(sum(z -> z * z, t))
 
 # Whether the primal value of `dist` is zero. A package extension for an AD type should
 # specialize this to look at the primal value.
 is_primal_zero(x) = iszero(x)
 
 """
-matern(x, y, params)
+`matern(x, y, params)`
 
 computes σ² * \\mathcal{M}_{ν}(||x-y||/ρ), where params = (σ, ρ, ν) and \\mathcal{M} is the Matern covariance function, parameterized as
 
@@ -18,17 +17,16 @@ computes σ² * \\mathcal{M}_{ν}(||x-y||/ρ), where params = (σ, ρ, ν) and \
 For more information, see Stein (1999), Interpolation of Spatial Data: Some Theory for Kriging.
 """
 function matern(x, y, params)
-  (sg, rho, nu) = (params[1], params[2], params[3])
-  dist = _norm(x-y)
-  is_primal_zero(dist) && return sg^2
-  arg = sqrt(2*nu)*dist/rho
-  (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
+    (sg, rho, nu) = (params[1], params[2], params[3])
+    dist = _norm(x - y)
+    is_primal_zero(dist) && return sg^2
+    arg = sqrt(2 * nu) * dist / rho
+    return (sg * sg * (2^(1 - nu)) / _gamma(nu)) * adbesselkxv(nu, arg)
 end
 
 function matern(dist, params)
-  (sg, rho, nu) = (params[1], params[2], params[3])
-  is_primal_zero(dist) && return sg^2
-  arg = sqrt(2*nu)*dist/rho
-  (sg*sg*(2^(1-nu))/_gamma(nu))*adbesselkxv(nu, arg)
+    (sg, rho, nu) = (params[1], params[2], params[3])
+    is_primal_zero(dist) && return sg^2
+    arg = sqrt(2 * nu) * dist / rho
+    return (sg * sg * (2^(1 - nu)) / _gamma(nu)) * adbesselkxv(nu, arg)
 end
-
