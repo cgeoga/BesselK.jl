@@ -4,6 +4,10 @@
 
 _norm(t) = sqrt(sum(z->z*z, t))
 
+# Whether the primal value of `dist` is zero. A package extension for an AD type should
+# specialize this to look at the primal value.
+is_primal_zero(x) = iszero(x)
+
 """
 matern(x, y, params)
 
