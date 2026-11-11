@@ -26,6 +26,13 @@ This package implements the following functions:
 
 # Limitations
 
+* **Not suitable for large orders.** This library makes aggressive use of local
+  approximations that only apply to orders in the interval `[-1e-3, 1+1e-3]` and
+  then uses forward recurrence for all higher orders. The performance for small
+  orders is quite good! But `besselk(12385.1, 3.1)` will be *very* slow. For a
+  general-purpose `besselk` this is not very focused on Matern kernels, see
+  `Bessels.besselk`.
+
 * **Only derivatives up to the second are checked and confirmed accurate.** The
   code uses a large number of local polynomial expansions at slightly hairy
   values of internal intermediate functions, and so at some sufficiently high
